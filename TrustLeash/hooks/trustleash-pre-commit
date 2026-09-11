@@ -1,0 +1,66 @@
+#!/usr/bin/env bash
+# TrustLeash pre-commit hook: block commits whose message claims work that
+# isn't in the diff. Install:  trustleash install-hook  (or copy manually)
+#
+# Checks:
+#   1. Commit message creation-claims (created/wrote/added <path>) — every
+#      claimed path must appear in the staged diff or the working tree.
+#   2. Optional TRUSTLEASH_STRICT=1: also audit referenced session transcripts.
+
+PYTHON="${TRUSTLEASH_PYTHON:-/home/bleaknarratives/venv/bin/python}"
+
+msg_file="$1"
+[ -z "$msg_file" ] && msg_file=".git/COMMIT_EDITMSG"
+
+if [ ! -f "$msg_file" ]; then
+    exit 0  # nothing to check (amend/rebase edge cases)
+fi
+
+# Skip merge/revert commits
+head -1 "$msg_file" | grep -qE "^(Merge |Revert )" && exit 0
+
+"$PYTHON" - "$msg_file" <<'PYEOF'
+import re
+import subprocess
+import sys
+
+CLAIM = re.compile(
+    r"\b(?:created|wrote|generated|added|implemented|built)\b"
+    r"[\s\w-]{0,40}?([\w./-]+\.\w{1,4})\b", re.IGNORECASE)
+
+msg_path = sys.argv[1]
+message = open(msg_path, encoding="utf-8", errors="replace").read()
+claims = list(dict.fromkeys(CLAIM.findall(message)))
+if not claims:
+    sys.exit(0)
+
+# Paths touched by this commit (staged) + files that exist in the worktree
+staged = set()
+try:
+    out = subprocess.run(["git", "diff", "--cached", "--name-only"],
+                         capture_output=True, text=True, check=True).stdout
+    staged = {line.strip() for line in out.splitlines() if line.strip()}
+except subprocess.CalledProcessError:
+    pass
+
+from pathlib import Path
+phantom = []
+for rel in claims:
+    rel = rel.lstrip("./")
+    if rel in staged:
+        continue
+    if Path(rel).exists():
+        continue
+    phantom.append(rel)
+
+if phantom:
+    print("TrustLeash: commit BLOCKED — message claims work not in this commit:", file=sys.stderr)
+    for p in phantom:
+        print(f"  ✗ {p}  (not staged, not on disk)", file=sys.stderr)
+    print("\nFix: stage the files, or reword the message (claims must match the diff).", file=sys.stderr)
+    sys.exit(1)
+
+print(f"TrustLeash: {len(claims)} work claim(s) verified against diff ✓")
+PYEOF
+# propagate the python verdict (0 = clean, 1 = blocked)
+exit $?

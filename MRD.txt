@@ -1,0 +1,53 @@
+=====================================================================
+MRD — MEATSUIT RUNDOWN
+(only what REQUIRES a human. everything else is automated or delegated)
+=====================================================================
+
+PRIME DIRECTIVE: get the human out of the loop. Everything in this file is
+here because a bot legally/practically cannot do it yet. If an item can be
+automated later, it moves off this file. Keep this list SHORT.
+
+--- HUMAN-ONLY ITEMS (as of 2026-09-11) ----------------------------
+
+1. MONEY ACCOUNTS (bots can't own things)
+   [ ] Create/get: GitHub account (can reuse existing), domain name
+       (~$10/yr, suggest constraintops.com or .io), email inbox for the
+       CTA (suggest hello@<domain> — Google Workspace or Proton)
+   [ ] Stripe or PayPal account for the $250/$500/$750 invoices
+       (payment_system/ has license/Stripe scaffolding worth reviewing)
+
+2. LEGAL IDENTITY (bots can't sign)
+   [ ] Decide: sole prop vs LLC for ConstraintOps
+   [ ] One-page terms: fixed-price scope, no-outcome-guarantee clause,
+       confidentiality default. Template request -> any agent, but a
+       human reviews/signs.
+
+3. THE FIRST FIVE PROSPECTS (humans buy from humans; outreach is drafted,
+   the sending is yours until trust exists)
+   [ ] Pick 5 real people who fit: solo devs / small operators burned by
+       AI tools. Outreach draft: ConstraintOps/OUTREACH.md
+   [ ] Do the first free triage calls using TRIAGE_CALL_SCRIPT.md
+
+4. APPROVALS REQUIRED BEFORE ANY OF THESE SHIP PUBLIC
+   [ ] Landing page (ConstraintOps/site/index.html) — review the CTA
+       email placeholder "you@example.com" -> replace with real inbox
+   [ ] Portfolio piece (portfolio/SAMPLE_AI_DAMAGE_TRIAGE.md) — confirm
+       redaction is sufficient FOR YOUR comfort level before publishing
+   [ ] GitHub publish of TrustLeash (public repo = permanent)
+
+5. CREDENTIALS (deliberately not touched per operator instruction)
+   [ ] Plaintext keys scattered in ~ (.git-credentials, mo_keys* etc.)
+       remain your business. Noted once; no nagging.
+
+--- WHAT THE BOTS DO WITHOUT YOU (do not do these by hand) --------
+  - flywheel.py: tests, sweep, self-triage, state snapshot
+  - Client triage reports: triage_report.py + agent human-pass
+  - Hook installs, transcript audits, leaderboard regeneration
+  - Doc updates: agents append WHO_DID_WHAT.md / runbook.txt themselves
+
+--- THE HEARTBEAT (repeat weekly, ~15 min of meatsuit time) -------
+  [ ] Run flywheel or confirm an agent ran it (failures.json empty?)
+  [ ] One outreach action (call/email/post) from OUTREACH.md pipeline
+  [ ] Check ROADMAP.md: tick anything done, pick the next checkbox
+  [ ] Move anything automatable off this file. The list shrinks or
+      the vision fails.

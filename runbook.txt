@@ -1,0 +1,52 @@
+=====================================================================
+CONSTRAINTOPS RUNBOOK — operational quick reference
+(append-only; add new entries at the bottom with a date)
+=====================================================================
+
+[2026-09-11] WHAT THIS PROJECT IS
+  A ground-level intelligence practice that sells verification of AI-agent
+  work. Instrument: TrustLeash (~/TrustLeash). Practice: this folder.
+
+[2026-09-11] THE ONE COMMAND
+  /home/bleaknarratives/venv/bin/python ~/ConstraintOps/flywheel.py
+    Stage 1  pytest (verify instrument)      ~1s
+    Stage 2  machine sweep -> leaderboard    ~4s
+    Stage 3  refresh self-triage report      <1s
+    Stage 4  snapshot state                  <1s
+  Failures quarantine to ConstraintOps/state/failures.json with the exact
+  retry command. Chain continues degraded; nothing dies silently.
+
+[2026-09-11] AUDIT A SINGLE TRANSCRIPT
+  venv/bin/python -m trustleash audit <file.jsonl> --root <project> --strict
+    --strict        exit 1 if CORRUPT (use in scripts/hooks)
+    --report f.md   write markdown report
+    Format auto-detects: gemini / claude / opencode / codex / generic.
+
+[2026-09-11] INSTALL THE COMMIT LIE-FILTER (per repo)
+  cd <repo> && venv/bin/python -m trustleash install-hook
+  Blocks commits whose message claims files not staged/on disk.
+
+[2026-09-11] GENERATE A CLIENT DELIVERABLE
+  venv/bin/python ~/ConstraintOps/triage_report.py \
+      --client "Name" --transcripts <globs...> --root <project> --out report.md
+  THEN do the human pass on sections 4-5 per services/AI_DAMAGE_TRIAGE.md.
+  Never ship raw tool output; never ship a verdict without translation.
+
+[2026-09-11] WHERE THE EVIDENCE LIVES ON THIS MACHINE
+  gemini:   ~/.gemini/tmp/<proj>/chats/*.jsonl
+  codex:    ~/.codex/sessions/YYYY/MM/DD/rollout-*.jsonl
+  claude:   ~/.claude/projects/*/*.jsonl   (none present yet)
+  opencode: ~/.local/share/opencode/storage/message/*/  (none present yet)
+
+[2026-09-11] TESTS
+  cd ~/TrustLeash && venv/bin/python -m pytest tests/ -q     (29 passing)
+
+[2026-09-11] RULES OF ENGAGEMENT (from the creed — non-negotiable)
+  1. We reveal, we don't conceal: raw evidence always ships with the report.
+  2. We simplify: no cosmology, no verdict-word without translation.
+  3. We respond: procedure on a schedule, never panic theater.
+  4. We grow: every deliverable leaves the client more autonomous.
+  5. Every claim in any client doc cites a file, log, or transcript.
+
+=====================================================================
+(append new dated entries below this line)
