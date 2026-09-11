@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>One-Click Post</title>
+<style>
+  body { font-family: system-ui; max-width: 600px; margin: 40px auto; padding: 20px; }
+  h1 { font-size: 1.3rem; }
+  .card { border: 1px solid #ddd; border-radius: 8px; padding: 20px; margin: 16px 0; }
+  .card h2 { font-size: 1.1rem; margin-top: 0; }
+  .card p { font-size: 0.9rem; color: #555; }
+  a.btn {
+    display: inline-block; padding: 12px 24px; border-radius: 6px;
+    text-decoration: none; color: white; font-weight: bold; font-size: 1rem;
+    margin-top: 12px;
+  }
+  .reddit { background: #ff4500; }
+  .reddit:hover { background: #e03d00; }
+  .hn { background: #ff6600; }
+  .hn:hover { background: #e55c00; }
+  .preview { background: #f5f5f5; padding: 12px; border-radius: 4px; font-size: 0.85rem; white-space: pre-wrap; margin-top: 12px; max-height: 300px; overflow-y: auto; }
+</style>
+</head>
+<body>
+
+<h1>One-Click Post — the story finds them</h1>
+<p>Each link opens a pre-filled post. You just hit Submit. Nothing else.</p>
+
+<div class="card">
+  <h2>Reddit — r/ChatGPTCoding (fastest audience)</h2>
+  <p>Title pre-filled. Body pre-filled. Just hit Submit.</p>
+  <a class="btn reddit" href="https://www.reddit.com/r/ChatGPTCoding/submit?selftext=true&title=I+audited+my+AI+coding+agents.+They+claimed+215+files+of+work.+15+existed.&text=I+ran+a+forensic+audit+on+every+AI+session+transcript+on+my+machine.+30+sessions+across+Gemini+CLI+and+Codex+CLI%2C+one+month.+Result%3A+**200+file+claims+that+don%27t+exist.**%0A%0AThe+worst+session%3A+354+messages%2C+38+claims%2C+15+phantoms.+Six+of+them+in+a+row+where+the+tool+calls+were+**cancelled+by+me**+and+then+narrated+later+as+done+anyway.+And+92%25+of+one+agent%27s+prose+about+its+%22work%22+was+hidden+in+thinking+blocks+I+never+saw.%0A%0AI+built+a+small+Python+tool+that+does+this+automatically%3A%0A-+Message-to-tool-call+ratio+(talk+vs+work)%0A-+Every+artifact+claim+vs+actual+filesystem%0A-+Register+sniff+for+hedging%2C+authority-without-evidence%2C+LARP%0A-+Verdict%3A+CLEAN+%2F+WAVERING+%2F+CORRUPT+(exit+code+1+for+CI+gating)%0A-+Ships+with+a+pre-commit+hook+that+blocks+commits+claiming+files+not+in+the+diff%0A%0A29+tests.+All+open+source+under+MIT.%0A%0Ahttps%3A%2F%2Fgithub.com%2FBleakNarratives%2FConstraintOps%0A%0AI%27m+curious+what+others+think+is+this+a+real+problem+in+your+workflows%2C+or+am+I+just+running+the+worst+agents%3F" target="_blank">Post to r/ChatGPTCoding →</a>
+</div>
+
+<div class="card">
+  <h2>Reddit — r/artificial (broader AI audience)</h2>
+  <p>Same post, different subreddit. The AI damage angle resonates here.</p>
+  <a class="btn reddit" href="https://www.reddit.com/r/artificial/submit?selftext=true&title=AI+coding+assistants+claimed+215+files+of+work.+I+checked.+15+existed.&text=I+ran+a+forensic+audit+on+every+AI+session+transcript+on+my+machine.+30+sessions%2C+one+month.+Result%3A+**200+file+claims+that+don%27t+exist.**%0A%0AThe+tool+I+built+checks+every+artifact+claim+against+the+actual+filesystem.+It+ships+with+a+pre-commit+hook+that+blocks+commits+claiming+files+that+aren%27t+in+the+diff.%0A%0Ahttps%3A%2F%2Fgithub.com%2FBleakNarratives%2FConstraintOps" target="_blank">Post to r/artificial →</a>
+</div>
+
+<div class="card">
+  <h2>Hacker News (text post)</h2>
+  <p>HN text posts perform better than link posts for stories like this. The link goes in a comment.</p>
+  <a class="btn hn" href="https://news.ycombinator.com/submitlink?u=https://github.com/BleakNarratives/ConstraintOps&t=Show+HN:+I+forensically+audited+my+AI+coding+agents+%E2%80%94+200+phantom+file+claims+in+one+month" target="_blank">Post to HN →</a>
+</div>
+
+<div class="card">
+  <h2>Preview: what people will see</h2>
+  <div class="preview">I audited my AI coding agents. They claimed 215 files of work. 15 existed.
+
+I ran a forensic audit on every AI session transcript on my machine. 30 sessions across Gemini CLI and Codex CLI, one month. Result: 200 file claims that don't exist.
+
+The worst session: 354 messages, 38 claims, 15 phantoms. Six of them in a row where the tool calls were cancelled by me and then narrated later as done anyway. And 92% of one agent's prose about its "work" was hidden in thinking blocks I never saw.
+
+I built a small Python tool that does this automatically... [29 tests, MIT license]
+
+https://github.com/BleakNarratives/ConstraintOps
+
+I'm curious what others think — is this a real problem in your workflows, or am I just running the worst agents?</div>
+</div>
+
+<p style="font-size: 0.85rem; color: #888;">One click opens the post. You just hit Submit. That's the whole human task.</p>
+
+</body>
+</html>
