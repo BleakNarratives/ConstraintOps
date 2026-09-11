@@ -48,3 +48,4 @@ The goal is that you need me less next time, not more.
 ## Contact
 
 **bleaknarratives@gmail.com** — subject line "Triage call" gets you the free 20 minutes.
+**Text:** (316) 932-4247
