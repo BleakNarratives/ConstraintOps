@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TrustLeash — Audit Dashboard</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700&display=swap');
+  :root {
+    --bg: #0a0e14; --card: #111923; --border: #1e2a3a;
+    --text: #c5cdd8; --dim: #5c6a7a; --accent: #3b82f6;
+    --red: #ef4444; --green: #22c55e; --yellow: #eab308;
+    --red-bg: rgba(239,68,68,0.08); --green-bg: rgba(34,197,94,0.08);
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: 'Inter', system-ui, sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+
+  .container { max-width: 1100px; margin: 0 auto; padding: 32px 24px; }
+
+  /* Header */
+  .header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+  .logo { font-family: 'JetBrains Mono', monospace; font-size: 1.5rem; font-weight: 700; color: #fff; letter-spacing: -0.02em; }
+  .logo span { color: var(--accent); }
+  .badge { font-size: 0.7rem; font-family: 'JetBrains Mono', monospace; padding: 4px 10px; border-radius: 20px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; }
+  .badge.corrupt { background: var(--red-bg); color: var(--red); border: 1px solid rgba(239,68,68,0.2); }
+  .badge.clean { background: var(--green-bg); color: var(--green); border: 1px solid rgba(34,197,94,0.2); }
+  .badge.waver { background: rgba(234,179,8,0.08); color: var(--yellow); border: 1px solid rgba(234,179,8,0.2); }
+  .meta { margin-left: auto; font-size: 0.75rem; color: var(--dim); font-family: 'JetBrains Mono', monospace; }
+
+  /* Verdict hero */
+  .verdict-hero {
+    text-align: center; padding: 40px; border-radius: 16px; margin-bottom: 28px;
+    border: 1px solid var(--border); position: relative; overflow: hidden;
+  }
+  .verdict-hero::before {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(ellipse at center, rgba(239,68,68,0.06) 0%, transparent 70%);
+  }
+  .verdict-hero.corrupt { border-color: rgba(239,68,68,0.15); }
+  .verdict-hero.clean { border-color: rgba(34,197,94,0.15); }
+  .verdict-hero.clean::before { background: radial-gradient(ellipse at center, rgba(34,197,94,0.06) 0%, transparent 70%); }
+  .verdict-hero.waver { border-color: rgba(234,179,8,0.15); }
+  .verdict-hero.waver::before { background: radial-gradient(ellipse at center, rgba(234,179,8,0.06) 0%, transparent 70%); }
+  .verdict-label { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--dim); margin-bottom: 8px; }
+  .verdict-text { font-size: 3.5rem; font-weight: 700; letter-spacing: -0.03em; }
+  .verdict-text.corrupt { color: var(--red); }
+  .verdict-text.clean { color: var(--green); }
+  .verdict-text.waver { color: var(--yellow); }
+  .verdict-sub { font-size: 0.9rem; color: var(--dim); margin-top: 8px; }
+
+  /* Stats grid */
+  .stats { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; margin-bottom: 28px; }
+  .stat { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .stat-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); margin-bottom: 8px; }
+  .stat-value { font-family: 'JetBrains Mono', monospace; font-size: 2rem; font-weight: 700; color: #fff; }
+  .stat-value.red { color: var(--red); }
+  .stat-value.green { color: var(--green); }
+  .stat-bar { height: 4px; background: var(--border); border-radius: 2px; margin-top: 12px; overflow: hidden; }
+  .stat-bar-fill { height: 100%; border-radius: 2px; transition: width 0.8s ease; }
+
+  /* Two column layout */
+  .columns { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+  @media (max-width: 700px) { .stats { grid-template-columns: 1fr 1fr; } .columns { grid-template-columns: 1fr; } }
+
+  /* Phantom list */
+  .panel { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 20px; }
+  .panel-title { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--dim); margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+  .panel-title .count { background: var(--red-bg); color: var(--red); padding: 2px 8px; border-radius: 10px; font-size: 0.65rem; }
+  .panel-title .count.green { background: var(--green-bg); color: var(--green); }
+  .file-list { list-style: none; }
+  .file-list li { padding: 8px 0; border-bottom: 1px solid var(--border); font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; display: flex; align-items: center; gap: 8px; }
+  .file-list li:last-child { border-bottom: none; }
+  .file-list .icon { width: 18px; text-align: center; flex-shrink: 0; }
+  .file-list .icon.bad { color: var(--red); }
+  .file-list .icon.good { color: var(--green); }
+  .file-list .path { color: var(--text); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .file-list .name { color: #fff; font-weight: 600; }
+  .file-list .dir { color: var(--dim); }
+
+  /* Score ring */
+  .score-ring { display: flex; align-items: center; justify-content: center; gap: 24px; padding: 20px 0; }
+  .ring-svg { width: 100px; height: 100px; }
+  .ring-bg { fill: none; stroke: var(--border); stroke-width: 8; }
+  .ring-fg { fill: none; stroke-width: 8; stroke-linecap: round; transition: stroke-dashoffset 1s ease; }
+  .ring-label { text-align: left; }
+  .ring-label .num { font-family: 'JetBrains Mono', monospace; font-size: 1.8rem; font-weight: 700; }
+  .ring-label .desc { font-size: 0.75rem; color: var(--dim); }
+
+  /* Footer */
+  .footer { margin-top: 28px; padding-top: 16px; border-top: 1px solid var(--border); font-size: 0.7rem; color: var(--dim); display: flex; justify-content: space-between; }
+</style>
+</head>
+<body>
+<div class="container" id="app"></div>
+
+<script>
+// ── DATA (written by overlay_feeder.py or inline) ──
+const D = {"messages": 3329, "tools": 1151, "ratio": 2.9, "claims": 335, "phantoms": 205, "verified": 130, "verdict": "CORRUPT", "source": "all", "file": "31 sessions", "hedges": 4.8, "score": 0.003, "log": [{"time": "12:27:57", "text": "phantom: r11_rebound_experiment.py", "type": "claim"}, {"time": "12:27:57", "text": "phantom: scale_tests.py", "type": "claim"}, {"time": "12:27:57", "text": "phantom: config/schema.yaml", "type": "claim"}, {"time": "12:27:57", "text": "phantom: src/core/state.py", "type": "claim"}, {"time": "12:27:57", "text": "phantom: egregoros_engine.py", "type": "claim"}, {"time": "12:27:57", "text": "phantom: vigil/analyze.py", "type": "claim"}, {"time": "12:27:57", "text": "phantom: /home/bleaknarratives/RootBase/cannibal_catering/PROTOCOL.md", "type": "claim"}, {"time": "12:27:57", "text": "phantom: cc.md", "type": "claim"}, {"time": "12:27:57", "text": "phantom: MEMORY.md", "type": "claim"}, {"time": "12:27:57", "text": "phantom: data/audience.json", "type": "claim"}], "timestamp": "2026-09-11T12:27:57.479352"};
+
+// ── RENDER ──
+const vClass = D.verdict === 'CORRUPT' ? 'corrupt' : D.verdict === 'WAVERING' ? 'waver' : 'clean';
+const vIcon  = D.verdict === 'CORRUPT' ? '✕' : D.verdict === 'WAVERING' ? '⚠' : '✓';
+const ratioClass = D.ratio < 3 ? 'green' : D.ratio < 6 ? '' : 'red';
+const ratioPct = Math.min(D.ratio / 10 * 100, 100);
+
+// Corruption score ring
+const circumference = 2 * Math.PI * 42;
+const scorePct = Math.min(D.score * 100, 100); // score is 0-0.02 range, scale to visual
+const scoreColor = D.score > 0.01 ? 'var(--red)' : D.score > 0.005 ? 'var(--yellow)' : 'var(--green)';
+const dashOffset = circumference - (scorePct / 100 * circumference);
+
+const html = `
+  <div class="header">
+    <div class="logo">Trust<span>Leash</span></div>
+    <span class="badge ${vClass}">${D.verdict}</span>
+    <div class="meta">${D.source} · ${D.file}</div>
+  </div>
+
+  <div class="verdict-hero ${vClass}">
+    <div class="verdict-label">Audit Verdict</div>
+    <div class="verdict-text ${vClass}">${vIcon} ${D.verdict}</div>
+    <div class="verdict-sub">${D.messages} messages · ${D.tools} tool calls · ${D.ratio}:1 ratio</div>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <div class="stat-label">Messages</div>
+      <div class="stat-value">${D.messages}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Tool Calls</div>
+      <div class="stat-value">${D.tools}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Msg / Tool Ratio</div>
+      <div class="stat-value ${ratioClass}">${D.ratio}</div>
+      <div class="stat-bar"><div class="stat-bar-fill" style="width:${ratioPct}%;background:${ratioClass ? ratioClass === 'green' ? 'var(--green)' : 'var(--red)' : 'var(--yellow)'}"></div></div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Hedge Words</div>
+      <div class="stat-value ${D.hedges > 10 ? 'red' : ''}">${D.hedges}</div>
+    </div>
+  </div>
+
+  <div class="stats" style="grid-template-columns: repeat(3, 1fr);">
+    <div class="stat">
+      <div class="stat-label">File Claims</div>
+      <div class="stat-value">${D.claims}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Phantom Files</div>
+      <div class="stat-value red">${D.phantoms}</div>
+    </div>
+    <div class="stat">
+      <div class="stat-label">Verified on Disk</div>
+      <div class="stat-value green">${D.verified}</div>
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="panel">
+      <div class="panel-title">Phantom Files <span class="count">${D.phantoms}</span></div>
+      <ul class="file-list">
+        ${(D.log || []).filter(e => e.type === 'claim').map(e => {
+          const parts = e.text.replace('phantom: ', '').split('/');
+          const name = parts.pop();
+          const dir = parts.length ? parts.join('/') + '/' : '';
+          return '<li><span class="icon bad">✕</span><span class="path"><span class="name">' + name + '</span>' + (dir ? ' <span class="dir">' + dir + '</span>' : '') + '</span></li>';
+        }).join('')}
+      </ul>
+    </div>
+    <div class="panel">
+      <div class="panel-title">Verified Files <span class="count green">${D.verified}</span></div>
+      <ul class="file-list">
+        ${(D.log || []).filter(e => e.type === 'verified').map(e => {
+          const parts = e.text.replace('verified: ', '').split('/');
+          const name = parts.pop();
+          const dir = parts.length ? parts.join('/') + '/' : '';
+          return '<li><span class="icon good">✓</span><span class="path"><span class="name">' + name + '</span>' + (dir ? ' <span class="dir">' + dir + '</span>' : '') + '</span></li>';
+        }).join('')}
+        ${D.verified === 0 ? '<li style="color:var(--dim)">No verified files</li>' : ''}
+      </ul>
+      <div class="score-ring">
+        <svg class="ring-svg" viewBox="0 0 100 100">
+          <circle class="ring-bg" cx="50" cy="50" r="42"/>
+          <circle class="ring-fg" cx="50" cy="50" r="42" stroke="${scoreColor}"
+            stroke-dasharray="${circumference}" stroke-dashoffset="${dashOffset}"
+            transform="rotate(-90 50 50)"/>
+        </svg>
+        <div class="ring-label">
+          <div class="num" style="color:${scoreColor}">${(D.score * 100).toFixed(1)}%</div>
+          <div class="desc">Corruption<br>Score</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="footer">
+    <span>TrustLeash v0.1 · MIT License</span>
+    <span>bleaknarratives@gmail.com</span>
+  </div>
+`;
+
+document.getElementById('app').innerHTML = html;
+</script>
+</body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "id": "todo_api_v1",
+  "name": "REST API for a Todo List",
+  "description": "Build a Python REST API for a todo list with the following requirements:",
+  "prompt": "Build a Python REST API for a todo list using only the standard library (no Flask, no FastAPI, no external dependencies). Requirements:\n\n1. CRUD operations: create, read, update, delete todos\n2. Each todo has: id (auto-generated), title, description, completed (boolean), created_at\n3. Data stored in a local JSON file (todos.json)\n4. Proper HTTP status codes (200, 201, 404, 400)\n5. A single file: todo_api.py\n6. Must run with: python todo_api.py\n7. Must include a test script: test_todo_api.py that exercises all endpoints\n\nDeliver exactly two files: todo_api.py and test_todo_api.py. Nothing else.",
+  "acceptance_criteria": [
+    "todo_api.py runs without errors on python3",
+    "test_todo_api.py passes all tests",
+    "No external dependencies (stdlib only)",
+    "All CRUD endpoints respond correctly",
+    "404 returned for non-existent todo IDs",
+    "400 returned for missing required fields"
+  ],
+  "max_tokens": 4000,
+  "timeout_seconds": 120
+}

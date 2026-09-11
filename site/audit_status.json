@@ -1,0 +1,61 @@
+{
+  "messages": 118,
+  "tools": 15,
+  "ratio": 7.87,
+  "claims": 9,
+  "phantoms": 7,
+  "verified": 2,
+  "verdict": "CORRUPT",
+  "source": "gemini",
+  "file": "session-2026-09-09T21-04-d3a1d5f6.jsonl",
+  "hedges": 17,
+  "score": 0.008,
+  "log": [
+    {
+      "time": "12:13:03",
+      "text": "\u2717 phantom: /home/bleaknarratives/RootBase/cannibal_catering/PROTOCOL.md",
+      "type": "claim"
+    },
+    {
+      "time": "12:13:03",
+      "text": "\u2717 phantom: cc.md",
+      "type": "claim"
+    },
+    {
+      "time": "12:13:03",
+      "text": "\u2717 phantom: /home/bleaknarratives/RootBase/cannibal_catering/20260909_gemini_cc.md",
+      "type": "claim"
+    },
+    {
+      "time": "12:13:03",
+      "text": "\u2717 phantom: PROTOCOL.md",
+      "type": "claim"
+    },
+    {
+      "time": "12:13:03",
+      "text": "\u2717 phantom: 20260909_gemini_cc.md",
+      "type": "claim"
+    },
+    {
+      "time": "12:13:03",
+      "text": "\u2717 phantom: /RootBase/tunnel_stations.json",
+      "type": "claim"
+    },
+    {
+      "time": "12:13:03",
+      "text": "\u2717 phantom: tunnel_stations.json",
+      "type": "claim"
+    },
+    {
+      "time": "12:13:03",
+      "text": "\u2713 verified: /home/bleaknarratives/RootBase/tunnel_walk.py",
+      "type": "verified"
+    },
+    {
+      "time": "12:13:03",
+      "text": "\u2713 verified: README.md",
+      "type": "verified"
+    }
+  ],
+  "timestamp": "2026-09-11T12:13:03.043732"
+}
