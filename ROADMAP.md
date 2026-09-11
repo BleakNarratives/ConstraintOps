@@ -26,8 +26,11 @@ and run the flywheel. No box gets ticked without evidence.
 
 ## Phase 1 — First money (week 1–2) — **CURRENT PHASE**
 
-- [ ] 1.1 Replace CTA placeholder `you@example.com` with real inbox
-      (needs MRD item 1: domain + inbox) — **BLOCKS ALL PUBLIC PUBLISH**
+- [x] 1.1 Replace CTA placeholder with real inbox
+      (bleaknarratives@gmail.com wired into site + flyer + one-pager;
+      commit a096a33). *(2026-09-11)*
+- [ ] 1.2b Wire payment rails: add BTC/XMR wallet address(es) to vault
+      (PAYMENT_RAILS.md — human task, ~30–60 min), test one fake order
 - [ ] 1.2 Booking flow: Cal.com free tier or mailto+template; NOT a build project
 - [ ] 1.3 Send OUTREACH.md message to 5 prospects (archetypes tabled; meatsuit task)
 - [ ] 1.4 Run ≥3 free triage calls; log outcomes; revise script from reality
